@@ -1,0 +1,27 @@
+node_modules
+.next
+out
+dist
+.turbo
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# database (local SQLite)
+sqlite.db
+sqlite.db-journal
+sqlite.db-shm
+sqlite.db-wal
+db/migrations/meta
+
+# editor / OS
+.DS_Store
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea
+.claude/
