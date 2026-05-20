@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/utils";
 import { LogApplicationDialog } from "./log-application-dialog";
 import { NotificationsPopover } from "./notifications-popover";
 import { useStore } from "@/lib/store";
+import { DateFilterPopover } from "@/components/date-filter-popover";
 import { UserMenu } from "./user-menu";
 
 function timeAgo(iso: string | null): string {
@@ -128,6 +129,7 @@ export function TopBar({ title, edition }: { title?: string; edition?: string })
               </kbd>
             )}
           </div>
+          <DateFilterPopover />
           {searchQuery && (
             <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ash">
               {filteredApplications.length} / {applications.length} matched

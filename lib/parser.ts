@@ -58,8 +58,17 @@ STATUS RULES — focus on the DECISIVE sentence, not surface keywords:
     • "Wir wünschen Ihnen für Ihren weiteren Werdegang alles Gute"
     • "Wir wünschen Ihnen für Ihre Zukunft alles Gute"
   Strong EN signals:
-    • "unfortunately", "we won't be moving forward", "decided to move forward with other candidates"
+    • "unfortunately", "we won't be moving forward", "we will not be moving forward"
+    • "decided to move forward with other candidates", "decided to move ahead with other candidates"
+    • "decided to proceed with other candidates", "going with another candidate"
     • "your background is not a match", "we will not be progressing your application"
+    • "after careful consideration" + ANY negative phrase like "decided to move ahead/forward with others"
+    • "experience aligns more closely with our current needs" (always implies someone else got picked)
+    • "we encourage you to apply again", "please keep an eye on our careers site" (deflection)
+  EN closing-phrase idioms (almost always rejection):
+    • "I wish you the very best of luck with your job search"
+    • "wish you the best of luck", "wish you all the best in your job search"
+    • "best of luck in your future endeavors", "all the best in your search"
 
 "interviewing" — the company is inviting, scheduling, or following up on a conversation/assessment.
   DE: "möchten wir Sie/dich zu einem Gespräch einladen", "Vorstellungsgespräch", "Kennenlerngespräch", "nächste Runde", "Termin für ein Gespräch", "Online-Assessment", "Eignungstest", "Auswahlverfahren weiter", "freuen uns, dich/Sie kennenzulernen".
@@ -113,6 +122,16 @@ Example 7 — Newsletter / job-board digest (NOT a specific application):
 Subject: "5 neue Stellenangebote für dich auf LinkedIn"
 Body: "Hier sind 5 neue Jobs, die zu deinem Profil passen..."
 → {"isJobRelated": false, "status": "unknown", "confidence": 0.95, "reasoning": "Job-board digest, not a real application thread."}
+
+Example 8 — English rejection with "move ahead" wording (Delivery Hero pattern):
+Subject: "Update on your application"
+Body: "Hi Mulya, thank you for taking the time to apply to Delivery Hero. After careful consideration, we've decided to move ahead with other candidates whose experience aligns more closely with our current needs. I understand this might be disappointing news... Please keep an eye on our careers site for other opportunities. In the meantime, I wish you the very best of luck with your job search!"
+→ {"isJobRelated": true, "status": "rejected", "company": "Delivery Hero", "confidence": 0.98, "reasoning": "'decided to move ahead with other candidates whose experience aligns more closely' + 'wish you the very best of luck with your job search' — explicit English rejection despite warm opener."}
+
+Example 9 — Subtle English rejection (no "rejection" word at all):
+Subject: "Thanks for applying"
+Body: "Thanks again for your interest. After reviewing your background carefully, we've decided to proceed with other candidates at this time. We encourage you to apply again in the future. Best of luck with your search!"
+→ {"isJobRelated": true, "status": "rejected", "confidence": 0.96, "reasoning": "'decided to proceed with other candidates' + 'apply again in the future' deflection + 'best of luck with your search' closer = rejection."}
 
 DATE PARSING:
 German formats like "Dienstag, 14. März 2026 um 14:00 Uhr" or "14.03.2026, 14 Uhr" → convert to ISO 8601 with Europe/Berlin offset (+01:00 winter, +02:00 summer 2026: Mar-Oct).

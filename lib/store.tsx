@@ -10,6 +10,11 @@ import {
   type ApplicationDTO,
   type ApplicationPatch,
 } from "@/app/actions/applications";
+import {
+  applicationMatchesDateFilter,
+  ALL_TIME,
+  type DateFilter,
+} from "@/lib/date-filter";
 import { runSyncNow, triggerInitialBackfillIfNeeded, getLastSync } from "@/app/actions/sync";
 
 export interface Notification {
@@ -28,6 +33,8 @@ interface StoreShape {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   matchesQuery: (app: Application) => boolean;
+  dateFilter: DateFilter;
+  setDateFilter: (f: DateFilter) => void;
   addApplication: (input: NewApplicationInput) => Application;
   updateApplication: (id: string, patch: ApplicationPatch) => Promise<void>;
   deleteApplication: (id: string) => Promise<void>;
@@ -187,6 +194,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [lastSyncAt, setLastSyncAt] = useState<string | null>(null);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState<DateFilter>(ALL_TIME);
 
   useEffect(() => {
     setExtraReads(loadReadIds());
@@ -359,10 +367,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     [tokens],
   );
 
-  const filteredApplications = useMemo(
-    () => (tokens.length === 0 ? applications : applications.filter(matchesQuery)),
-    [applications, matchesQuery, tokens.length],
-  );
+  const filteredApplications = useMemo(() => {
+    const dateActive = dateFilter.mode !== "all";
+    if (tokens.length === 0 && !dateActive) return applications;
+    return applications.filter((app) => {
+      if (tokens.length > 0 && !matchesQuery(app)) return false;
+      if (dateActive && !applicationMatchesDateFilter(app, dateFilter)) return false;
+      return true;
+    });
+  }, [applications, matchesQuery, tokens.length, dateFilter]);
 
   const value = useMemo(
     () => ({
@@ -371,6 +384,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       searchQuery,
       setSearchQuery,
       matchesQuery,
+      dateFilter,
+      setDateFilter,
       addApplication,
       updateApplication,
       deleteApplication,
@@ -385,7 +400,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       syncMessage,
       refresh,
     }),
-    [applications, filteredApplications, searchQuery, matchesQuery, addApplication, updateApplication, deleteApplication, notifications, unreadCount, markAllRead, markRead, syncing, triggerSync, isBackendActive, lastSyncAt, syncMessage, refresh],
+    [applications, filteredApplications, searchQuery, matchesQuery, dateFilter, addApplication, updateApplication, deleteApplication, notifications, unreadCount, markAllRead, markRead, syncing, triggerSync, isBackendActive, lastSyncAt, syncMessage, refresh],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

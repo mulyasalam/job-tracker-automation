@@ -57,9 +57,24 @@ function inferStatusFromContent(raw: RawEmail): "applied" | "interviewing" | "re
     "viel erfolg bei der suche nach einer neuen herausforderung",
     "weiterhin viel erfolg", "weiteren werdegang alles gute",
     "ihre zukunft alles gute", "deine zukunft alles gute",
-    // English
-    "unfortunately", "moved forward with other", "not be progressing",
-    "won't be moving forward", "wont be moving forward", "not a match",
+    // English — explicit rejection phrases
+    "unfortunately", "not a match", "not be progressing",
+    "won't be moving forward", "wont be moving forward",
+    "will not be moving forward", "are not moving forward",
+    // "move ahead/forward/proceed with other candidates" — all variants
+    "moved forward with other", "move forward with other", "moving forward with other",
+    "moved ahead with other", "move ahead with other", "moving ahead with other",
+    "decided to move ahead with other", "decided to move forward with other",
+    "decided to proceed with other", "going with another candidate",
+    "experience aligns more closely",
+    // English closing-phrase idioms
+    "wish you the very best of luck", "wish you the best of luck",
+    "wish you all the best in your", "best of luck with your job search",
+    "best of luck in your future", "all the best in your search",
+    "all the best in your job",
+    // Deflection phrases that imply rejection
+    "encourage you to apply again", "keep an eye on our careers",
+    "apply for future opportunities", "future opportunities at",
   ];
   if (rejectionPatterns.some((p) => haystack.includes(p))) return "rejected";
 
